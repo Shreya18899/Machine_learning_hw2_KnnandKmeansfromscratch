@@ -10,7 +10,7 @@ def euclidean(a, b):
 
 def cosim(a, b):
     """
-    return: Cosine Similarity between vectors a dn b
+    return: Cosine Similarity between vectors a and b
     """
     dot_product = sum(vect1 * vect2 for vect1, vect2 in zip(a, b))
     magnitude_v1 = sum(vect1 ** 2 for vect1 in a) ** 0.5

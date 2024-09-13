@@ -20,7 +20,6 @@ warnings.filterwarnings("ignore")
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
-
 def load_data(file_name, frac=1):
     '''
     Loads in a data file, returns X, y. Can take a sample with frac.
@@ -54,7 +53,7 @@ def plot_confusion_matrix(y_true, y_pred, algorithm, data, distance_metric):
     plt.savefig(f'confusion_matrix_{algorithm}_{data}_{distance_metric}.png')
 
     # Show the plot
-    #plt.show()
+    # plt.show()
 
 
 def assign_cluster_labels(clusters, actual_labels):
@@ -103,6 +102,10 @@ def test_euclidean():
 def test_cosim():
     """
     Test cosine similarity
+    Calculating Distances:
+        numpy_cosine calculates the Cosine similarity using NumPy.
+        our_euclidean calls your custom cosine function.
+    Assertion: It checks if the difference between the two calculated distances is within a very small tolerance (0.0001)
     """
     X, _ = load_data('valid.csv')
 
@@ -116,9 +119,9 @@ def test_cosim():
 
 
 def pca_eda():
-    '''
+    """
     Exploratory data analysis - graphing cumulative explained variance from PCA on training set
-    '''
+    """
     X, _ = load_data(file_name='train.csv')
 
     pca = PCA()
@@ -139,7 +142,7 @@ def pca_eda():
     plt.ylabel('Cumulative Explained Variance')
     plt.title('Cumulative Explained Variance')
     plt.grid()
-    #plt.show()
+    # plt.show()
     plt.savefig('pca_eda.png')
 
     # Zoom into 30-100
@@ -150,7 +153,7 @@ def pca_eda():
     plt.title('Cumulative Explained Variance (Principal Components 30-100)')
     plt.grid()
     plt.xlim(30, 100)
-    #plt.show()
+    # plt.show()
     plt.savefig('pca_eda_zoomed.png')
 
 
@@ -174,12 +177,12 @@ def run_KNN(title, distance_measure='euclidean', n_neighbors=None):
 
     knn = KNearestNeighbor(n_neighbors=n_neighbors, distance_measure=distance_measure)
 
-    ### Assuming grayscale
+    # Assuming grayscale
     X_train = knn.scale_greyscale_features(X_train)
     X_val = knn.scale_greyscale_features(X_val)
     X_test = knn.scale_greyscale_features(X_test)
 
-    ### Dimensionality reduction
+    # Dimensionality reduction
     X_train = knn.pca_fit_transform(X_train, n_components=75).tolist()
     X_val = knn.pca_transform(X_val).tolist()
     X_test = knn.pca_transform(X_test).tolist()
@@ -333,36 +336,36 @@ if __name__ == "__main__":
     print()
     test_cosim()
     print()
-
-    #pca_eda()
+    # pca_eda()
 
     start_time = time.time()
 
     # run KNN with euclidean
+    print("Running KNN with euclidean and K not specified")
     run_KNN(distance_measure='euclidean', n_neighbors=None, title='KNN Auto-k with euclidean')
 
-    # run KNN with cosim
-    run_KNN(distance_measure='cosim', n_neighbors=None, title='KNN Auto-k with cosim')
-
-    # run KNN with specified k
-    run_KNN(distance_measure='euclidean', n_neighbors=2, title='KNN k=2 with euclidean')
-
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Elapsed time for knn's: {elapsed_time} seconds")
-
-    st_kmeans = time.time()
-    print("K means starting with k = 10 clusters assuming MNIST dataset")
-    # run Kmeans with euclidean
-    run_Kmeans(distance_measure='euclidean', max_iter=100)
-    # run Kmeans with cosim
-    run_Kmeans(distance_measure='cosim', max_iter=100)
-    print(f"Elapsed time for k means : {time.time() - st_kmeans} seconds \n\n")
-
-    st_skmeans = time.time()
-    print("Soft K means starting with k = 10 clusters assuming MNIST dataset")
-    # run soft Kmeans with cosim
-    run_SoftKmeans(distance_measure='cosim', max_iter=100, beta_values=[0.01, 0.02, 0.03, 0.05])
-    # run soft Kmeans with euclidean
-    run_SoftKmeans(distance_measure='euclidean', max_iter=100, beta_values=[0.01])
-    print(f"Elapsed time for soft k means : {time.time() - st_skmeans} seconds")
+    # # run KNN with cosim
+    # run_KNN(distance_measure='cosim', n_neighbors=None, title='KNN Auto-k with cosim')
+    #
+    # # run KNN with specified k
+    # run_KNN(distance_measure='euclidean', n_neighbors=2, title='KNN k=2 with euclidean')
+    #
+    # end_time = time.time()
+    # elapsed_time = end_time - start_time
+    # print(f"Elapsed time for knn's: {elapsed_time} seconds")
+    #
+    # st_kmeans = time.time()
+    # print("K means starting with k = 10 clusters assuming MNIST dataset")
+    # # run Kmeans with euclidean
+    # run_Kmeans(distance_measure='euclidean', max_iter=100)
+    # # run Kmeans with cosim
+    # run_Kmeans(distance_measure='cosim', max_iter=100)
+    # print(f"Elapsed time for k means : {time.time() - st_kmeans} seconds \n\n")
+    #
+    # st_skmeans = time.time()
+    # print("Soft K means starting with k = 10 clusters assuming MNIST dataset")
+    # # run soft Kmeans with cosim
+    # run_SoftKmeans(distance_measure='cosim', max_iter=100, beta_values=[0.01, 0.02, 0.03, 0.05])
+    # # run soft Kmeans with euclidean
+    # run_SoftKmeans(distance_measure='euclidean', max_iter=100, beta_values=[0.01])
+    # print(f"Elapsed time for soft k means : {time.time() - st_skmeans} seconds")

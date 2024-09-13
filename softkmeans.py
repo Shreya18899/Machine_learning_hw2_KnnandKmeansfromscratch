@@ -40,6 +40,7 @@ class SoftKMeans():
 
     def fit(self, features):
         n_samples, n_features = features.shape
+        # randomly initialize the cluster centroids
         self.means = features[np.random.choice(n_samples, self.n_clusters, replace=False)]
         # print("Random means initialized")
 

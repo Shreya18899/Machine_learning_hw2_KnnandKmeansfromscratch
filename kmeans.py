@@ -71,10 +71,14 @@ class KMeans():
         for iteration in range(self.max_iter):
             # Calculate the euclidean distance between each training sample with all cluster centroids
             # returns distances of n_samples * dim (e.g. 784) and self.means = n_clusters * 784
+            # returns 200 * 5 as distance array, where each observation has distance computed from n_clusters
             if self.distance_measure == 'euclidean':
                 distances = [[euclidean(feat, mean) for mean in self.means] for feat in features]
             elif self.distance_measure == 'cosim':
                 # 1 - cosim since cosim will give values from -1 to 1, making it a more intuitive distance metric for computation
+                # if cosim(feat, mean) = 1, distance = 0, the point and means coincide
+                # if cosim(feat, mean) = 1, distance = 2, maximum distance from the point
+                # distances will be made positive, which inturn is more intuitive
                 distances = [[1 - cosim(feat, mean) for mean in self.means] for feat in features]
             # distances2 = np.linalg.norm(features[:, np.newaxis] - self.means, axis=2)
             # take the index of the minimum value of a sample with the cluster centroid and assign it that label
@@ -84,6 +88,7 @@ class KMeans():
             # unique, counts = np.unique(labels, return_counts=True)
             # print(f"Iteration {iteration + 1} label counts: {dict(zip(unique, counts))}")
 
+#
             # Handling empty clusters
             new_means = np.zeros_like(self.means)
             for k in range(self.n_clusters):
@@ -92,6 +97,8 @@ class KMeans():
                     self.means[k] = features[np.random.choice(n_samples)]
                 else:
                     # Update cluster centers by computing the mean of the samples
+                    # if 5 points are assigned to a cluster, calculate the mean of the 5 points to form a centroid of
+                    # dimension 1*784
                     new_means[k] = features[labels == k].mean(axis=0)
             # new_means = np.array([features[labels == k].mean(axis=0) for k in range(self.n_clusters)])
             # Check for convergence, if means do not change over 2 iterations k means has converged

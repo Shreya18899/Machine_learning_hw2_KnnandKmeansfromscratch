@@ -56,7 +56,8 @@ class KNearestNeighbor():
 
 
     def fit(self, features, targets):
-        """Fit features, a numpy array of size (n_samples, n_features). For a KNN, this
+        """
+        Fit features, a numpy array of size (n_samples, n_features). For a KNN, this
         function should store the features and corresponding targets in class 
         variables that can be accessed in the `predict` function. Note that targets can
         be multidimensional! 
@@ -73,7 +74,8 @@ class KNearestNeighbor():
         self.set_default_label_ordering()
 
     def fit_with_validation(self, X_train, y_train, X_val, y_val):
-        """This function does the same as fit, but it also finds the best k using the validation set.
+        """
+        This function does the same as fit, but it also finds the best k using the validation set.
         """
         
         self.features = X_train
@@ -83,8 +85,11 @@ class KNearestNeighbor():
 
         best_k = None
         best_acc = 0
+        # if number of neighbors or K is not specified, find best k
         if self.n_neighbors is None:
             # k_to_check is 2, and up to 3 evenly spaced ints between 3 and the sqrt of the number of features
+            # generates values to check for k from 2 to sqrt(2000) = 44 [checks 4 in total 2 + 3 evenly spaced numbers from
+            # 3 to 28
             k_to_check = [2] + np.unique(np.linspace(3, math.sqrt(len(self.features)), 3, dtype=int)).tolist()
             print('k\'s to test: ', k_to_check)
             for k in k_to_check:
@@ -99,11 +104,16 @@ class KNearestNeighbor():
 
         
     def set_default_label_ordering(self):
-        """This function sets the default label ordering for breaking ties.
-        
+        """
+        This function sets the default label ordering for breaking ties.
         The label are ordered by the frequency of their occurrence in the training set. This will be used later to break ties, where if there is a tie between two labels, the label that shows up first in the default ordering will be chosen as the prediction.
-
         If two labels show up equally in the training set, we arbitrarily prefer the label that is larger (e.g. B > A) for consistency
+        Tie Scenario:
+
+        Suppose the labels of the three nearest neighbors are: [A, B, C].
+        The counts are: A: 1, B: 1, C: 1.
+        Tie: No single label appears more frequently than others; all have the same count (1 each).
+        [Note: tie scenario will not occur if k=3 and if the labels are binary]
         """
 
         # Count the number of occurrences of each label in the training set
@@ -145,7 +155,9 @@ class KNearestNeighbor():
 
     
     def predict_internal(self, samples, ignore_first=False, n_neighbors=None):
-    
+        """
+        Samples - validation set/test set depending on what is passed in n_neighbors
+        """
         # n_neighbors is None if we are doing real life prediction
         # n_neighbors is not None if we are doing validation on the test set
         if n_neighbors is None:
