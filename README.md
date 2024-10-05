@@ -3,3 +3,5 @@ Implementing distance metrics, a KNN classifier and a K-Means classifier from sc
 
 To run follow the following instructions:
 -> run main.py - this will run KNN, Kmeans and SoftKmeans
+
+**python3 main.py
